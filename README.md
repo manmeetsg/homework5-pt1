@@ -1,9 +1,4 @@
-# starter express app template
+# Manmeet's backend
 
-* node with babel
-* expressjs
-* airbnb eslint rules
-
-Procfile set up to run on [heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs#deploy-the-app)
-
-
+It works! Also, I added split tags for extra credit.
+Discussed and collaborated with Alex Beals.
