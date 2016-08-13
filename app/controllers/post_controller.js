@@ -1,5 +1,4 @@
 /* Discussed with Alex Beals and worked with him on this */
-
 import Post from '../models/post_model';
 
 // Create a new post in the format our front end likes
