@@ -9,17 +9,38 @@ export const signin = (req, res, next) => {
 export const signup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const username = req.body.username;
 
-  if (!email || !password) {
-    return res.status(422).send('You must provide email and password');
+  // Check that there is an email and a password
+  if (!email || !password || !username) {
+    return res.status(422).send('You must provide email, password, and username.');
   }
 
-// 🚀 TODO:
-// here you should do a mongo query to find if a user already exists with this email.
-// if user exists then return an error. If not, use the User model to create a new user.
-// Save the new User object
-// this is similar to how you created a Post
-// and then return a token same as you did in in signin
+  // Check if there exists a user with that email
+  User.findOne({ email })
+  .then(existing => {
+    if (!existing) {
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      user.username = username;
+
+      // Attempt to save the new user
+      user.save()
+      .then(result => {
+        res.json({ token: tokenForUser(user) });
+      })
+      .catch(err => {
+        res.status(400).send(`Error: ${err}`);
+      });
+    } else {
+      // Handle existing email
+      return res.status(422).send('An account already existing with this email.');
+    }
+  })
+  .catch(err => {
+    res.status(400).send(`Error: ${err}.`);
+  });
 };
 
 // encodes a new token for a user object

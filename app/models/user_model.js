@@ -4,14 +4,13 @@ import bcrypt from 'bcrypt-nodejs';
 const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  username: String,
 });
 
 UserSchema.set('toJSON', {
   virtuals: true,
 });
-
-// create a class for the model
-const UserModel = mongoose.model('User', UserSchema);
 
 UserSchema.pre('save', function beforeUserSave(next) {
   // this is a reference to our model
@@ -38,8 +37,7 @@ UserSchema.pre('save', function beforeUserSave(next) {
   });
 });
 
-// note use of named function rather than arrow notation
-//  this arrow notation is lexically scoped and prevents binding scope, which mongoose relies on
+// Add password compare function
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) { return callback(err); }
@@ -48,5 +46,7 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
   });
 };
 
+// create model class
+const UserModel = mongoose.model('User', UserSchema);
 
 export default UserModel;
