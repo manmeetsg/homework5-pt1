@@ -1,9 +1,15 @@
-import jwt from 'jwt-simple';
 import User from '../models/user_model';
-import config from '../config.js';
+import jwt from 'jwt-simple';
+import config from '../config';
+
+// encodes a new token for a user object
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
+}
 
 export const signin = (req, res, next) => {
-  res.send({ token: tokenForUser(req.user) });
+  res.json({ token: tokenForUser(req.user) });
 };
 
 export const signup = (req, res, next) => {
@@ -42,9 +48,3 @@ export const signup = (req, res, next) => {
     res.status(400).send(`Error: ${err}.`);
   });
 };
-
-// encodes a new token for a user object
-function tokenForUser(user) {
-  const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
-}

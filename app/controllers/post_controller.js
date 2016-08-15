@@ -1,14 +1,12 @@
-/* Discussed with Alex Beals and worked with him on this */
 import Post from '../models/post_model';
 
-// Create a new post in the format our front end likes
 export const createPost = (req, res) => {
   const post = new Post();
   post.title = req.body.title;
   post.tags = req.body.tags.split(' ');
   post.content = req.body.content;
   post.author = req.user._id;
-  // copied from Tim
+
   post.save()
   .then(result => {
     res.json({ message: 'Post created!' });
@@ -18,7 +16,6 @@ export const createPost = (req, res) => {
   });
 };
 
-// Get the posts
 export const getPosts = (req, res) => {
   Post.find().sort('-created_at').exec((err, posts) => {
     if (err) {
@@ -35,7 +32,6 @@ export const getPosts = (req, res) => {
   });
 };
 
-// Get a single post
 export const getPost = (req, res) => {
   Post.findById(req.params.id)
   .populate('author')
@@ -53,7 +49,6 @@ export const getPost = (req, res) => {
   });
 };
 
-// Delete a post
 export const deletePost = (req, res) => {
   Post.remove({ _id: req.params.id }, (err) => {
     if (err) {
@@ -64,7 +59,6 @@ export const deletePost = (req, res) => {
   });
 };
 
-// Update a post
 export const updatePost = (req, res) => {
   Post.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
     if (err) {
